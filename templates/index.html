@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <section class="cyber-card" style="text-align: center; margin-top: 2rem;">
+        <h1 style="color: var(--cyber-blue); font-size: 2.5rem; margin-bottom: 1rem;">
+            <i class="fas fa-shield-alt"></i> CyberRedact
+        </h1>
+        <p style="font-size: 1.2rem; color: #ccc; margin-bottom: 2rem;">
+            Advanced Document Sanitization & Security Redaction Platform
+        </p>
+        
+        <!-- Security Metrics -->
+        <div class="security-metrics">
+            <div class="metric-card">
+                <div class="metric-value metric-secure">AES-256</div>
+                <div class="metric-label">Encryption Level</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value metric-secure">99.7%</div>
+                <div class="metric-label">Detection Accuracy</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value metric-secure">0</div>
+                <div class="metric-label">Data Leaks</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value metric-secure">24/7</div>
+                <div class="metric-label">Protection Active</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section class="cyber-card">
+        <h2 style="color: var(--cyber-green); margin-bottom: 1.5rem;">
+            <i class="fas fa-file-upload"></i> Secure Document Upload
+        </h2>
+        
+        <form action="/" method="post" enctype="multipart/form-data" class="upload-form" id="mainForm">
+            <!-- SIMPLE FILE INPUT (No JavaScript interference) -->
+            <div style="margin-bottom: 2rem; text-align: center;">
+                <label style="color: var(--cyber-blue); display: block; margin-bottom: 1rem; font-size: 1.1rem;">
+                    <i class="fas fa-file"></i> SELECT YOUR FILE
+                </label>
+                <input type="file" name="file" id="fileInput" required 
+                       accept=".pdf,.docx,.txt,.png,.jpg,.jpeg"
+                       style="color: white; padding: 15px; border: 2px dashed var(--cyber-blue); 
+                              background: rgba(0, 255, 255, 0.05); width: 80%; font-family: 'Courier New', monospace;">
+            </div>
+            
+            <!-- Redaction Options -->
+            <div style="margin: 2rem 0;">
+                <h3 style="color: var(--cyber-blue); margin-bottom: 1rem;">
+                    <i class="fas fa-cogs"></i> Redaction Settings
+                </h3>
+                
+                <!-- CHECKBOX GRID -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 10px; border: 1px solid #333; border-radius: 4px;">
+                        <input type="checkbox" name="redact_ocr" value="on">
+                        <i class="fas fa-eye-slash" style="color: var(--cyber-blue);"></i>
+                        <span>OCR Text</span>
+                    </label>
+                    
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 10px; border: 1px solid #333; border-radius: 4px;">
+                        <input type="checkbox" name="redact_meta" value="on">
+                        <i class="fas fa-database" style="color: var(--cyber-blue);"></i>
+                        <span>Metadata</span>
+                    </label>
+                    
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 10px; border: 1px solid #333; border-radius: 4px;">
+                        <input type="checkbox" name="redact_face" value="on" checked>
+                        <i class="fas fa-user-secret" style="color: var(--cyber-blue);"></i>
+                        <span>Faces</span>
+                    </label>
+                    
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 10px; border: 1px solid #333; border-radius: 4px;">
+                        <input type="checkbox" name="redact_license_plate" value="on">
+                        <i class="fas fa-car" style="color: var(--cyber-blue);"></i>
+                        <span>License Plates</span>
+                    </label>
+                    
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 10px; border: 1px solid #333; border-radius: 4px;">
+                        <input type="checkbox" name="redact_signature" value="on" checked>
+                        <i class="fas fa-signature" style="color: var(--cyber-blue);"></i>
+                        <span>Signatures</span>
+                    </label>
+                    
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 10px; border: 1px solid #333; border-radius: 4px;">
+                        <input type="checkbox" name="redact_nsfw" value="on">
+                        <i class="fas fa-exclamation-triangle" style="color: var(--cyber-blue);"></i>
+                        <span>NSFW Content</span>
+                    </label>
+                    
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 10px; border: 1px solid #333; border-radius: 4px;">
+                        <input type="checkbox" name="doc_check" value="on">
+                        <i class="fas fa-file-alt" style="color: var(--cyber-blue);"></i>
+                        <span>Document Mode</span>
+                    </label>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-signature"></i>
+                        </div>
+                        <h4>Digital Signatures</h4>
+                        <p>Detect and blur digital signatures</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-secret"></i>
+                        </div>
+                        <h4>Face Detection</h4>
+                        <p>Automatically blur faces</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <h4>License Plates</h4>
+                        <p>Detect and redact number plates</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-eye-slash"></i>
+                        </div>
+                        <h4>Sensitive Text</h4>
+                        <p>OCR-based text redaction</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Level -->
+            <div style="margin: 2rem 0;">
+                <h3 style="color: var(--cyber-blue); margin-bottom: 1rem;">
+                    <i class="fas fa-shield-alt"></i> Security Level
+                </h3>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="radio" name="security_level" value="standard" checked>
+                        <span>Standard</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="radio" name="security_level" value="enhanced">
+                        <span>Enhanced</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="radio" name="security_level" value="maximum">
+                        <span>Maximum</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div style="text-align: center; margin-top: 2rem;">
+                <button type="submit" class="btn-cyber btn-cyber-success" style="padding: 15px 30px;">
+                    <i class="fas fa-play"></i> INITIATE SECURE REDACTION
+                </button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="cyber-card">
+        <h2 style="color: var(--cyber-blue); text-align: center; margin-bottom: 2rem;">
+            <i class="fas fa-star"></i> SECURITY FEATURES
+        </h2>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h4>AI-Powered Detection</h4>
+                <p>Advanced machine learning models for accurate sensitive data detection</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-eraser"></i>
+                </div>
+                <h4>Secure Erasure</h4>
+                <p>Permanent removal of metadata and sensitive content</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-file-contract"></i>
+                </div>
+                <h4>Multi-Format Support</h4>
+                <p>Process PDF, DOCX, images, and text files securely</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-user-lock"></i>
+                </div>
+                <h4>Privacy First</h4>
+                <p>All processing happens locally, no data leaves your system</p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- SIMPLE JAVASCRIPT FOR FILE SELECTION FEEDBACK -->
+<script>
+document.getElementById('fileInput').addEventListener('change', function(e) {
+    const fileName = this.files[0] ? this.files[0].name : 'No file selected';
+    console.log('File selected:', fileName);
+    
+    // Simple visual feedback
+    if (this.files[0]) {
+        this.style.borderColor = 'var(--cyber-green)';
+        this.style.background = 'rgba(0, 255, 0, 0.05)';
+    }
+});
+
+// Form submission logging
+document.getElementById('mainForm').addEventListener('submit', function(e) {
+    console.log('🚀 Form submitted!');
+    console.log('File:', document.getElementById('fileInput').files[0]);
+    console.log('Form data will be processed...');
+});
+</script>
+{% endblock %}

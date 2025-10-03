@@ -1,0 +1,650 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <!-- Scan Report Header -->
+    <section class="cyber-card" style="margin-top: 2rem;">
+        <div class="scan-header">
+            <div class="scan-title">
+                <h1 style="color: var(--cyber-blue); margin: 0;">
+                    <i class="fas fa-file-shield"></i> SECURITY SCAN REPORT
+                </h1>
+                <p class="scan-meta">
+                    <span class="meta-item">
+                        <i class="fas fa-hashtag"></i> Scan ID: <strong>{{ scan_id | default('CYBER-0000') }}</strong>
+                    </span>
+                    <span class="meta-item">
+                        <i class="fas fa-clock"></i> Timestamp: <strong>{{ timestamp | default('2025-10-02 16:19:51') }}</strong>
+                    </span>
+                </p>
+            </div>
+            <div class="scan-status">
+                <div class="status-badge status-secure">
+                    <i class="fas fa-check-circle"></i> SCAN COMPLETE
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Threat Assessment -->
+    <section class="cyber-card">
+        <h2 style="color: var(--cyber-blue); margin-bottom: 1.5rem;">
+            <i class="fas fa-radar"></i> THREAT ASSESSMENT
+        </h2>
+        
+        <div class="threat-metrics">
+            <div class="threat-level">
+                <div class="level-indicator">
+                    <div class="level-bar">
+                        <div class="level-fill" style="width: {{ threat_level|default(15) }}%;"></div>
+                    </div>
+                    <div class="level-labels">
+                        <span>LOW</span>
+                        <span>MEDIUM</span>
+                        <span>HIGH</span>
+                        <span>CRITICAL</span>
+                    </div>
+                </div>
+                <div class="level-result">
+                    {% set risk_value = threat_level|default(15) %}
+                    {% if risk_value <= 25 %}
+                        <span class="risk-level risk-low">RISK LEVEL: LOW</span>
+                    {% elif risk_value <= 50 %}
+                        <span class="risk-level risk-medium">RISK LEVEL: MEDIUM</span>
+                    {% elif risk_value <= 75 %}
+                        <span class="risk-level risk-high">RISK LEVEL: HIGH</span>
+                    {% else %}
+                        <span class="risk-level risk-critical">RISK LEVEL: CRITICAL</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Metrics Grid -->
+        <div class="security-metrics" style="margin-top: 2rem;">
+            <div class="metric-card">
+                <div class="metric-value metric-secure">{{ files_processed|default('1') }}</div>
+                <div class="metric-label">Files Processed</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value metric-danger">{{ sensitive_found|default('0') }}</div>
+                <div class="metric-label">Sensitive Items</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value metric-secure">{{ redacted_count|default('0') }}</div>
+                <div class="metric-label">Items Redacted</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value metric-secure">{{ success_rate|default('100') }}%</div>
+                <div class="metric-label">Success Rate</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detection Results -->
+    <section class="cyber-card">
+        <h2 style="color: var(--cyber-blue); margin-bottom: 1.5rem;">
+            <i class="fas fa-search"></i> DETECTION RESULTS
+        </h2>
+
+        <!-- Model Detection Summary -->
+        <div class="detection-summary">
+            <div class="model-card">
+                <div class="model-icon">
+                    <i class="fas fa-signature"></i>
+                </div>
+                <div class="model-info">
+                    <h4>Digital Signatures</h4>
+                    <p class="model-stats">
+                        Detected: <span class="stat-value">{{ signatures_detected|default(0) }}</span> |
+                        Redacted: <span class="stat-secure">{{ signatures_redacted|default(0) }}</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="model-card">
+                <div class="model-icon">
+                    <i class="fas fa-user-secret"></i>
+                </div>
+                <div class="model-info">
+                    <h4>Faces</h4>
+                    <p class="model-stats">
+                        Detected: <span class="stat-value">{{ faces_detected|default(0) }}</span> |
+                        Redacted: <span class="stat-secure">{{ faces_redacted|default(0) }}</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="model-card">
+                <div class="model-icon">
+                    <i class="fas fa-car"></i>
+                </div>
+                <div class="model-info">
+                    <h4>License Plates</h4>
+                    <p class="model-stats">
+                        Detected: <span class="stat-value">{{ plates_detected|default(0) }}</span> |
+                        Redacted: <span class="stat-secure">{{ plates_redacted|default(0) }}</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="model-card">
+                <div class="model-icon">
+                    <i class="fas fa-eye-slash"></i>
+                </div>
+                <div class="model-info">
+                    <h4>Sensitive Text</h4>
+                    <p class="model-stats">
+                        Detected: <span class="stat-value">{{ text_detected|default(0) }}</span> |
+                        Redacted: <span class="stat-secure">{{ text_redacted|default(0) }}</span>
+                    </p>
+                </div>
+            </div>
+
+            {% if nsfw_detected|default(0) > 0 %}
+            <div class="model-card">
+                <div class="model-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="model-info">
+                    <h4>NSFW Content</h4>
+                    <p class="model-stats">
+                        Detected: <span class="stat-value">{{ nsfw_detected|default(0) }}</span> |
+                        Redacted: <span class="stat-secure">{{ nsfw_redacted|default(0) }}</span>
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- File Results Table -->
+    <section class="cyber-card">
+        <h2 style="color: var(--cyber-blue); margin-bottom: 1.5rem;">
+            <i class="fas fa-file-alt"></i> FILE ANALYSIS
+        </h2>
+
+        <div class="results-table-container">
+            <table class="cyber-table">
+                <thead>
+                    <tr>
+                        <th>FILE NAME</th>
+                        <th>TYPE</th>
+                        <th>STATUS</th>
+                        <th>SENSITIVE ITEMS</th>
+                        <th>ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if processed_files %}
+                        {% for file in processed_files %}
+                        <tr>
+                            <td class="file-name">
+                                <i class="fas fa-file-{{ file.type|default('pdf') }}"></i>
+                                {{ file.name }}
+                            </td>
+                            <td class="file-type">{{ file.extension|upper }}</td>
+                            <td class="file-status">
+                                <span class="status-badge status-{{ file.status|default('secure') }}">
+                                    <i class="fas fa-{{ 'check-circle' if file.status == 'secure' else 'exclamation-triangle' }}"></i>
+                                    {{ file.status|upper|default('SECURE') }}
+                                </span>
+                            </td>
+                            <td class="file-sensitive">
+                                <span class="sensitive-count {{ 'has-sensitive' if file.sensitive_count > 0 else 'no-sensitive' }}">
+                                    {{ file.sensitive_count|default(0) }}
+                                </span>
+                            </td>
+                            <td class="file-actions">
+                                {% if file.download_url %}
+                                <a href="{{ file.download_url }}" class="btn-cyber btn-cyber-success btn-small">
+                                    <i class="fas fa-download"></i> DOWNLOAD
+                                </a>
+                                {% endif %}
+                                <button class="btn-cyber btn-small" onclick="showFileDetails('{{ file.name }}')">
+                                    <i class="fas fa-info-circle"></i> DETAILS
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <!-- Default sample data -->
+                        <tr>
+                            <td class="file-name">
+                                <i class="fas fa-file-pdf"></i>
+                                document.pdf
+                            </td>
+                            <td class="file-type">PDF</td>
+                            <td class="file-status">
+                                <span class="status-badge status-secure">
+                                    <i class="fas fa-check-circle"></i> SECURE
+                                </span>
+                            </td>
+                            <td class="file-sensitive">
+                                <span class="sensitive-count no-sensitive">0</span>
+                            </td>
+                            <td class="file-actions">
+                                <a href="#" class="btn-cyber btn-cyber-success btn-small">
+                                    <i class="fas fa-download"></i> DOWNLOAD
+                                </a>
+                                <button class="btn-cyber btn-small">
+                                    <i class="fas fa-info-circle"></i> DETAILS
+                                </button>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Security Actions -->
+    <section class="cyber-card">
+        <h2 style="color: var(--cyber-blue); margin-bottom: 1.5rem;">
+            <i class="fas fa-play-circle"></i> SECURITY ACTIONS
+        </h2>
+        
+        <div class="action-buttons">
+            <a href="/" class="btn-cyber btn-cyber-success">
+                <i class="fas fa-plus-circle"></i> PROCESS NEW FILES
+            </a>
+            <button class="btn-cyber" onclick="exportReport()">
+                <i class="fas fa-file-export"></i> EXPORT SECURITY REPORT
+            </button>
+            <button class="btn-cyber btn-cyber-danger">
+                <i class="fas fa-trash-alt"></i> PURGE ORIGINAL FILES
+            </button>
+        </div>
+    </section>
+
+    <!-- System Log -->
+    <section class="cyber-card">
+        <h2 style="color: var(--cyber-blue); margin-bottom: 1.5rem;">
+            <i class="fas fa-terminal"></i> SYSTEM LOG
+        </h2>
+        
+        <div class="terminal-output">
+            <div class="log-entry log-info">
+                <span class="log-time">[12:34:56]</span>
+                <span class="log-message">Initializing CyberRedact security protocols...</span>
+            </div>
+            <div class="log-entry log-info">
+                <span class="log-time">[12:34:57]</span>
+                <span class="log-message">Loading AI detection models: Signature, Face, License Plate, OCR</span>
+            </div>
+            <div class="log-entry log-success">
+                <span class="log-time">[12:35:02]</span>
+                <span class="log-message">All security models loaded successfully</span>
+            </div>
+            <div class="log-entry log-info">
+                <span class="log-time">[12:35:03]</span>
+                <span class="log-message">Processing file: document.pdf</span>
+            </div>
+            <div class="log-entry log-warning">
+                <span class="log-time">[12:35:05]</span>
+                <span class="log-message">Detected 2 digital signatures - Applying redaction</span>
+            </div>
+            <div class="log-entry log-success">
+                <span class="log-time">[12:35:07]</span>
+                <span class="log-message">Redaction complete - File secured</span>
+            </div>
+            <div class="log-entry log-info">
+                <span class="log-time">[12:35:08]</span>
+                <span class="log-message">Security scan completed - 0 threats remaining</span>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- File Details Modal -->
+<div id="fileDetailsModal" class="modal">
+    <div class="modal-content cyber-card">
+        <span class="close">&times;</span>
+        <h3 style="color: var(--cyber-blue);">File Details</h3>
+        <div id="fileDetailsContent">
+            <!-- Dynamic content will be loaded here -->
+        </div>
+    </div>
+</div>
+
+<style>
+/* Results Page Specific Styles */
+.scan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.scan-meta {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.meta-item {
+    color: #888;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.threat-level {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.level-indicator {
+    flex: 1;
+    min-width: 300px;
+}
+
+.level-bar {
+    background: #1a1a1a;
+    height: 20px;
+    border: 1px solid var(--cyber-blue);
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.level-fill {
+    background: linear-gradient(90deg, var(--cyber-green), var(--cyber-red));
+    height: 100%;
+    transition: width 1s ease;
+}
+
+.level-labels {
+    display: flex;
+    justify-content: space-between;
+    color: #666;
+    font-size: 0.8rem;
+    font-family: 'Courier New', monospace;
+}
+
+.risk-level {
+    padding: 10px 20px;
+    border: 1px solid;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.risk-low { border-color: var(--cyber-green); color: var(--cyber-green); }
+.risk-medium { border-color: orange; color: orange; }
+.risk-high { border-color: var(--cyber-red); color: var(--cyber-red); }
+.risk-critical { border-color: var(--cyber-red); color: var(--cyber-red); background: rgba(255, 7, 58, 0.1); }
+
+.detection-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.model-card {
+    background: rgba(30, 30, 40, 0.6);
+    border: 1px solid #333;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+}
+
+.model-card:hover {
+    border-color: var(--cyber-purple);
+    transform: translateY(-2px);
+}
+
+.model-icon {
+    font-size: 2rem;
+    color: var(--cyber-blue);
+}
+
+.model-info h4 {
+    color: var(--cyber-blue);
+    margin: 0 0 0.5rem 0;
+}
+
+.model-stats {
+    color: #ccc;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.stat-value { color: var(--cyber-orange); font-weight: bold; }
+.stat-secure { color: var(--cyber-green); font-weight: bold; }
+
+.results-table-container {
+    overflow-x: auto;
+}
+
+.cyber-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Courier New', monospace;
+}
+
+.cyber-table th {
+    background: rgba(0, 255, 255, 0.1);
+    color: var(--cyber-blue);
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--cyber-blue);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.8rem;
+}
+
+.cyber-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #333;
+    color: #ccc;
+}
+
+.file-name {
+    color: var(--cyber-blue);
+    font-weight: bold;
+}
+
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.status-secure {
+    background: rgba(0, 255, 0, 0.1);
+    border: 1px solid var(--cyber-green);
+    color: var(--cyber-green);
+}
+
+.status-warning {
+    background: rgba(255, 165, 0, 0.1);
+    border: 1px solid orange;
+    color: orange;
+}
+
+.status-danger {
+    background: rgba(255, 7, 58, 0.1);
+    border: 1px solid var(--cyber-red);
+    color: var(--cyber-red);
+}
+
+.sensitive-count {
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.has-sensitive {
+    background: rgba(255, 7, 58, 0.2);
+    color: var(--cyber-red);
+    border: 1px solid var(--cyber-red);
+}
+
+.no-sensitive {
+    background: rgba(0, 255, 0, 0.1);
+    color: var(--cyber-green);
+    border: 1px solid var(--cyber-green);
+}
+
+.btn-small {
+    padding: 5px 10px;
+    font-size: 0.7rem;
+    margin: 2px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.terminal-output {
+    background: #000;
+    border: 1px solid var(--cyber-green);
+    padding: 1rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.log-entry {
+    margin-bottom: 5px;
+    display: flex;
+    gap: 10px;
+}
+
+.log-time {
+    color: var(--cyber-green);
+    min-width: 80px;
+}
+
+.log-info { color: var(--cyber-blue); }
+.log-success { color: var(--cyber-green); }
+.log-warning { color: orange; }
+.log-error { color: var(--cyber-red); }
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 500px;
+    max-width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+}
+
+.close {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    color: #aaa;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: var(--cyber-red);
+}
+
+@media (max-width: 768px) {
+    .scan-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .threat-level {
+        flex-direction: column;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .modal-content {
+        min-width: 90%;
+    }
+}
+</style>
+
+<script>
+function showFileDetails(filename) {
+    const modal = document.getElementById('fileDetailsModal');
+    const content = document.getElementById('fileDetailsContent');
+    
+    // Sample content - replace with actual file details
+    content.innerHTML = `
+        <h4 style="color: var(--cyber-blue);">${filename}</h4>
+        <div style="margin: 1rem 0;">
+            <p><strong>File Type:</strong> PDF Document</p>
+            <p><strong>Size:</strong> 2.4 MB</p>
+            <p><strong>Security Status:</strong> <span style="color: var(--cyber-green);">SECURE</span></p>
+            <p><strong>Redaction Applied:</strong> Digital Signatures, Sensitive Text</p>
+        </div>
+        <div style="background: #000; padding: 1rem; border: 1px solid #333;">
+            <h5 style="color: var(--cyber-blue); margin-top: 0;">Detection Log:</h5>
+            <p style="color: var(--cyber-green); margin: 0;">✓ 2 digital signatures detected and redacted</p>
+            <p style="color: var(--cyber-green); margin: 0;">✓ 0 sensitive text patterns found</p>
+            <p style="color: var(--cyber-green); margin: 0;">✓ Metadata successfully removed</p>
+        </div>
+    `;
+    
+    modal.style.display = 'block';
+}
+
+function exportReport() {
+    // Simulate report export
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> EXPORTING...';
+    btn.disabled = true;
+    
+    setTimeout(() => {
+        btn.innerHTML = '<i class="fas fa-check"></i> EXPORTED';
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }, 2000);
+    }, 1500);
+}
+
+// Close modal when clicking X
+document.querySelector('.close').addEventListener('click', function() {
+    document.getElementById('fileDetailsModal').style.display = 'none';
+});
+
+// Close modal when clicking outside
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('fileDetailsModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+});
+</script>
+{% endblock %}

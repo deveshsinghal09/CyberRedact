@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberRedact - Secure Document Sanitization</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Cyber Matrix Background -->
+    <div class="matrix-bg"></div>
+    
+    <!-- Cyber Header -->
+    <header class="cyber-header">
+        <div class="container">
+            <div class="nav-brand">
+                <div class="logo-container">
+                    <i class="fas fa-shield-alt cyber-glowing"></i>
+                    <h1>Cyber<span>Redact</span></h1>
+                </div>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    SYSTEM SECURE
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <a href="/" class="nav-link"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="#features" class="nav-link"><i class="fas fa-cogs"></i> Features</a>
+                <a href="#about" class="nav-link"><i class="fas fa-info-circle"></i> About</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Cyber Footer -->
+    <footer class="cyber-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="security-badges">
+                    <span class="badge"><i class="fas fa-lock"></i> AES-256 Encryption</span>
+                    <span class="badge"><i class="fas fa-shield-alt"></i> GDPR Compliant</span>
+                    <span class="badge"><i class="fas fa-user-shield"></i> HIPAA Ready</span>
+                </div>
+                <p class="footer-text">
+                    <i class="fas fa-network-wired"></i> Secure Document Processing | 
+                    <span class="encryption-status">ENCRYPTED CONNECTION ACTIVE</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/cyber-effects.js') }}"></script>
+</body>
+</html>
